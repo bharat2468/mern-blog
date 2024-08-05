@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input, RTE } from "./index";
+import { Input, Loading, RTE } from "./index";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import slugify from "slugify";
-import { createPost,updatePostData,updatePostImage } from "../api/posts";
+import { createPost, updatePostData, updatePostImage } from "../api/posts";
 
 function PostForm({ post }) {
 	// !react hook form config
@@ -24,9 +24,6 @@ function PostForm({ post }) {
 		},
 	});
 
-
-
-
 	//! logic implementation
 	const navigate = useNavigate();
 	const userData = useSelector((state) => state.auth.userData);
@@ -38,7 +35,7 @@ function PostForm({ post }) {
 	// 	mutationFn: login,
 	// 	onSuccess: (response) => {
 	// 		// Assuming the API returns user data on successful login
-    //         console.log(response.data.data);
+	//         console.log(response.data.data);
 	// 		dispatch(loginAction(response.data.data));
 	// 		navigate("/"); // Redirect to dashboard or home page
 	// 	},
@@ -48,7 +45,6 @@ function PostForm({ post }) {
 	// 	},
 	// });
 
-	
 	const submit = async (data) => {
 		// Generate slug from title
 		const slug = slugify(data.title, { lower: true, strict: true });
@@ -63,9 +59,6 @@ function PostForm({ post }) {
 		// Navigate or show success message
 	};
 
-
-
-
 	// !used for image preview
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
@@ -78,11 +71,15 @@ function PostForm({ post }) {
 		}
 	};
 
-
-
+	const [isEditorLoading, setIsEditorLoading] = useState(true);
 
 	return (
-		<>
+		<div className="relative">
+			{isEditorLoading && (
+				<div className="w-full h-full left-0 top-0 flex justify-center items-center absolute z-10 bg-base-100">
+					<Loading className="w-20" />
+				</div>
+			)}
 			{post ? (
 				<h2 className="text-center text-2xl font-bold">Update Post</h2>
 			) : (
@@ -153,6 +150,7 @@ function PostForm({ post }) {
 					name="content"
 					control={control}
 					defaultValue={getValues("content")}
+					setIsEditorLoading={setIsEditorLoading}
 					className=""
 				/>
 				{errors.content && (
@@ -167,7 +165,7 @@ function PostForm({ post }) {
 					{post ? "Update Post" : "Create Post"}
 				</button>
 			</form>
-		</>
+		</div>
 	);
 }
 

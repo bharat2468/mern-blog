@@ -18,7 +18,9 @@ function App() {
 		queryKey: ["currentUser"],
 		queryFn: getCurrentUser,
 		retry: 1,
-		staleTime: 1000 * 60,
+		refetchOnWindowFocus: false, // Disable automatic refetching on window focus
+		refetchOnMount: false,     // Disable automatic refetching on component mount
+		staleTime: 1000 * 60 * 60,
 	});
 
 	useEffect(() => {

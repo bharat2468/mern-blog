@@ -11,6 +11,7 @@ import {
 	deleteUser,
 	allUsers,
 	googleAuthHandler,
+	adminDeleteUser
 } from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import {
@@ -54,5 +55,7 @@ router
 router
 	.route("/update-avatar")
 	.patch(verifyJWT, upload.single("avatar"), updateAvatar);
+
+router.route("/admin-delete/:userId").delete(verifyJWT,isAdmin,adminDeleteUser);
 
 export default router;

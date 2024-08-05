@@ -36,6 +36,9 @@ const changePassword = async (data) => {
 	return await api.post("/users/change-password", data);
 };
 
+const adminDeleteUser = async (id) => {
+    return await api.delete(`/users/admin-delete/${id}`);
+};
 
 
 export {
@@ -47,5 +50,6 @@ export {
 	updateAvatar,
 	updateUserData,
 	changePassword,
-	googleAuth
+	googleAuth,
+	adminDeleteUser,
 };

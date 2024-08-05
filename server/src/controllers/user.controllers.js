@@ -472,6 +472,21 @@ const updateAvatar = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, user, "avatar changed successfully"));
 });
 
+
+const adminDeleteUser = asyncHandler(async (req, res) => {
+	const userId = req.params?.userId;
+	if(!userId){
+		throw new ApiError(400, "User id required");
+	}
+	const deletedUser = await User.findByIdAndDelete(userId);
+	if (!deletedUser) {
+		throw new ApiError(500, "Something went wrong while deleting the user");
+	}
+	return res
+		.status(200)
+		.json(new ApiResponse(200, deletedUser, "user deleted successfully"));
+})
+
 export {
 	registerUser,
 	loginUser,
@@ -484,4 +499,5 @@ export {
 	deleteUser,
 	allUsers,
 	googleAuthHandler,
+	adminDeleteUser,
 };
