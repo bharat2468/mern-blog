@@ -4,6 +4,7 @@ import { Input, Loading, RTE } from "./index";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import slugify from "slugify";
+import { useQueryClient } from "@tanstack/react-query";
 import { createPost, updatePostData, updatePostImage } from "../api/posts";
 
 function PostForm({ post }) {
@@ -26,24 +27,30 @@ function PostForm({ post }) {
 
 	//! logic implementation
 	const navigate = useNavigate();
+    const queryClient = useQueryClient();
 	const userData = useSelector((state) => state.auth.userData);
 	const [imagePreview, setImagePreview] = useState(
 		post?.featuredImage || null
 	);
 
-	// const { mutate, isLoading, isError, error } = useMutation({
-	// 	mutationFn: login,
-	// 	onSuccess: (response) => {
-	// 		// Assuming the API returns user data on successful login
-	//         console.log(response.data.data);
-	// 		dispatch(loginAction(response.data.data));
-	// 		navigate("/"); // Redirect to dashboard or home page
-	// 	},
-	// 	onError: (error) => {
-	// 		console.error("Login failed:", error);
-	// 		// Error is already captured in the `error` variable from useMutation
-	// 	},
-	// });
+	// const { mutate: updatePostData, isPending: isUpdating, isError: isUpdateError, error: updateError } = useMutation({
+    //     mutationFn: updatePostData,
+    //     onSuccess: (data) => {
+    //         queryClient.setQueryData(['currentUser'], data);
+    //         setShowSuccessMessage(true);
+    //         setTimeout(() => setShowSuccessMessage(false), 2000);
+    //     },
+    // });
+
+    // const { mutate: deleteProfile, isPending: isDeleting, isError: isDeleteError, error: deleteError } = useMutation({
+    //     mutationFn: deleteUser,
+    //     onSuccess: () => {
+    //         // Handle successful deletion (e.g., redirect to login page)
+	// 		dispatch(logout());
+	// 		navigate("/");
+    //         console.log("Profile deleted successfully");
+    //     },
+    // });
 
 	const submit = async (data) => {
 		// Generate slug from title

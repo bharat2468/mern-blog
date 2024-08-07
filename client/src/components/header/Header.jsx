@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Logo, LogoutBtn } from "../index";
+import { Container, Logo, UserOptionsButton } from "../index";
 import ThemeToggle from "./Themetoggle";
 import { useSelector } from "react-redux";
 
@@ -101,7 +101,7 @@ function Header() {
 
                 <div className="navbar-end">
                     {authStatus ? (
-                        <LogoutBtn />
+                        <UserOptionsButton />
                     ) : (
                         authButtons.map((item) => (
                             <button

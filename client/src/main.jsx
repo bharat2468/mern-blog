@@ -26,7 +26,6 @@ import {
 	Comments,
 	Protected,
 	Unauthorized,
-	Profile as ProfileAdmin,
 } from "./components/index.js";
 
 const queryClient = new QueryClient();
@@ -42,10 +41,6 @@ const nestedAdminRoute = {
 		{
 			index: true,
 			element: <Dashboard />,
-		},
-		{
-			path: "profile",
-			element: <ProfileAdmin className="w-[60%] mx-auto" />,
 		},
 		{
 			path: "users",

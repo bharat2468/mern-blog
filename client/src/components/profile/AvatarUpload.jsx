@@ -1,38 +1,40 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
 import { updateAvatar } from "../../api/users";
+import { useSelector } from "react-redux";
 
-function AvatarUpload({ user }) {
-    const [Avatar, setAvatar] = useState(user?.avatar);
+function AvatarUpload() {
+    const avatar = useSelector((state) => state.auth.user?.avatar)
+    const queryClient = useQueryClient()
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const { register, handleSubmit, formState: { errors },watch } = useForm();
-    const avatar = watch("avatar");
-
-    const { mutate, isLoading, isError, error } = useMutation({
+    const { mutate, isPending, isError, error } = useMutation({
         mutationFn: updateAvatar,
         onSuccess: (response) => {
-            console.log(response.data.data);
-            setAvatar(response.data.data.avatar);
+            console.log(response.data);
+            queryClient.invalidateQueries(['currentUser']);
         },
         onError: (error) => {
             console.error("Avatar update failed:", error);
         },
     });
+    console.log(isPending);
 
     const onSubmit = (data) => {
-        console.log(data);
-        if (data) {
-            mutate(data);
+        if (data.avatar[0]) {
+            const formData = new FormData();
+            formData.append('avatar', data.avatar[0]);
+            mutate(formData);
         }
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center">
-            <div className="avatar mb-4 max-w-[200px] my-5">
+            <div className="avatar mb-4 max-w-[150px] my-5">
                 <div className="rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img
-                        src={Avatar || "https://img.daisyui.com/images/stock/photo-1567653418876-5bb0e566e1c2.webp"}
+                        src={avatar || "https://img.daisyui.com/images/stock/photo-1567653418876-5bb0e566e1c2.webp"}
                         alt="Avatar"
                     />
                 </div>
@@ -41,7 +43,7 @@ function AvatarUpload({ user }) {
             <input
                 type="file"
                 className="file-input file-input-bordered w-full max-w-xs mb-4"
-                disabled={isLoading}
+                disabled={isPending}
                 {...register("avatar", {
                     required: "Please select an image",
                     validate: {
@@ -60,12 +62,12 @@ function AvatarUpload({ user }) {
             <button 
                 type="submit" 
                 className="btn btn-primary"
-                disabled={isLoading}
+                disabled={isPending}
             >
                 Upload Avatar
             </button>
 
-            {isLoading && (
+            {isPending && (
                 <p className="text-sm text-blue-500">New image is uploading...</p>
             )}
 

@@ -2,7 +2,7 @@ import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Error from "./Error";
 import Container from "./Container";
-import LogoutBtn from "./header/LogoutBtn";
+import UserOptionsButton from "./header/UserOptionsButton";
 import Logo from "./Logo";
 import ThemeToggle from "./header/Themetoggle";
 import Protected from "./AuthLayout";
@@ -10,7 +10,7 @@ import Input from "./Input";
 import Signup from "./SignUp";
 import Login from "./Login";
 import AdminDashboard from "./dashboard/AdminDashboard";
-import Profile from "./dashboard/Profile";
+import Profile from "./profile/Profile";
 import Dashboard from "./dashboard/Dashboard";
 import Users from "./dashboard/Users";
 import Posts from "./dashboard/Posts";
@@ -27,7 +27,7 @@ export {
 	Footer,
 	Error,
 	Container,
-	LogoutBtn,
+	UserOptionsButton,
 	Logo,
 	ThemeToggle,
 	Protected,

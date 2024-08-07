@@ -9,7 +9,7 @@ const allUsers = async () => {
 };
 
 const googleAuth = async (token) => {
-	return await api.post("/users/google", {token});
+	return await api.post("/users/google", { token });
 };
 
 const login = async (data) => {
@@ -28,18 +28,25 @@ const updateUserData = async (data) => {
 	return await api.patch("/users/update-user-details", data);
 };
 
+const adminDeleteUser = async (id) => {
+	return await api.delete(`/users/admin-delete/${id}`);
+};
+
 const updateAvatar = async (data) => {
-	return await api.post("/users/update-avatar", data);
+	return await api.patch("/users/update-avatar", data, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
+};
+
+const deleteUser = async () => {
+	return await api.delete("/users/delete");
 };
 
 const changePassword = async (data) => {
 	return await api.post("/users/change-password", data);
 };
-
-const adminDeleteUser = async (id) => {
-    return await api.delete(`/users/admin-delete/${id}`);
-};
-
 
 export {
 	getCurrentUser,
@@ -52,4 +59,5 @@ export {
 	changePassword,
 	googleAuth,
 	adminDeleteUser,
+	deleteUser
 };
