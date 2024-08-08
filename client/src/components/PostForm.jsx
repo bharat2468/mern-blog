@@ -1,13 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input, Loading, RTE } from "./index";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import slugify from "slugify";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { createPost, updatePostData, updatePostImage } from "../api/posts";
 
-function PostForm({ post }) {
+function PostForm() {
+	const location = useLocation();
+	const post = location.state?.post;
+
+	const [isFileChanged, setIsFileChanged] = useState(false); // Track file change
+	const [showCreateSuccessMessage, setShowCreateSuccessMessage] =
+		useState(false);
+	const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
+		useState(false);
+
 	// !react hook form config
 	const {
 		register,
@@ -27,47 +35,78 @@ function PostForm({ post }) {
 
 	//! logic implementation
 	const navigate = useNavigate();
-    const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 	const userData = useSelector((state) => state.auth.userData);
 	const [imagePreview, setImagePreview] = useState(
 		post?.featuredImage || null
 	);
 
-	// const { mutate: updatePostData, isPending: isUpdating, isError: isUpdateError, error: updateError } = useMutation({
-    //     mutationFn: updatePostData,
-    //     onSuccess: (data) => {
-    //         queryClient.setQueryData(['currentUser'], data);
-    //         setShowSuccessMessage(true);
-    //         setTimeout(() => setShowSuccessMessage(false), 2000);
-    //     },
-    // });
+	const {
+		mutate: updateData,
+		isPending: isUpdating,
+		isError: isUpdateError,
+		error: updateError,
+	} = useMutation({
+		mutationFn: ({ data, postId }) => updatePostData(data, postId),
+		onSuccess: (response) => {
+			queryClient.invalidateQueries(["posts"]);
+			queryClient.refetchQueries(["post", post.slug]);
+			console.log(post.slug);
+			setShowUpdateSuccessMessage(true);
+			setTimeout(() => {
+				setShowUpdateSuccessMessage(false);
+				navigate(`/post/${response.data?.data?.slug}`);
+			}, 2000);
+			console.log("Post updated successfully");
+		},
+	});
 
-    // const { mutate: deleteProfile, isPending: isDeleting, isError: isDeleteError, error: deleteError } = useMutation({
-    //     mutationFn: deleteUser,
-    //     onSuccess: () => {
-    //         // Handle successful deletion (e.g., redirect to login page)
-	// 		dispatch(logout());
-	// 		navigate("/");
-    //         console.log("Profile deleted successfully");
-    //     },
-    // });
+	const {
+		mutate: create,
+		isPending: isCreating,
+		isError: isCreateError,
+		error: createError,
+	} = useMutation({
+		mutationFn: createPost,
+		onSuccess: (response) => {
+			queryClient.invalidateQueries(["posts"]);
+			setShowCreateSuccessMessage(true);
+			setTimeout(() => {
+				setShowCreateSuccessMessage(false);
+				navigate(`/post/${response.data?.data?.slug}`);
+			}, 2000);
+			console.log("Post created successfully");
+		},
+	});
+	//?req to create post
+	// ?update the all posts query
+	// ?show success message
+	// ?navigate to the new post page
+	// ?error handling
 
 	const submit = async (data) => {
-		// Generate slug from title
-		const slug = slugify(data.title, { lower: true, strict: true });
+		console.log(data);
+
+		const formData = new FormData();
+		formData.append("title", data.title);
+		formData.append("content", data.content);
+		formData.append("tags", data.tags);
+		formData.append("timeToRead", data.timeToRead);
+		formData.append("image", data.image[0]);
 
 		if (post) {
-			// Update post logic
-			console.log("Updating post:", { ...data, slug });
+			if (isFileChanged && data.image[0]) {
+				updatePostImage(formData, post._id);
+			}
+			updateData({ data: formData, postId: post._id });
 		} else {
-			// Create post logic
-			console.log("Creating new post:", { ...data, slug });
+			create(formData);
 		}
-		// Navigate or show success message
 	};
 
 	// !used for image preview
 	const handleImageChange = (e) => {
+		setIsFileChanged(true); // Mark file as changed
 		const file = e.target.files[0];
 		if (file) {
 			const reader = new FileReader();
@@ -87,6 +126,7 @@ function PostForm({ post }) {
 					<Loading className="w-20" />
 				</div>
 			)}
+
 			{post ? (
 				<h2 className="text-center text-2xl font-bold">Update Post</h2>
 			) : (
@@ -94,7 +134,7 @@ function PostForm({ post }) {
 			)}
 			<form
 				onSubmit={handleSubmit(submit)}
-				className="flex flex-col space-y-4 w-full max-w-3xl mx-auto">
+				className="flex flex-col space-y-4 w-full max-w-3xl mx-auto my-10">
 				<Input
 					label="Featured Image:"
 					type="file"
@@ -168,10 +208,26 @@ function PostForm({ post }) {
 
 				<button
 					type="submit"
-					className={`btn ${post ? "btn-success" : "btn-primary"} w-full mt-4`}>
+					className={`btn ${post ? "btn-success" : "btn-primary"} w-full mt-4`}
+					disabled={isCreating || isUpdating}>
 					{post ? "Update Post" : "Create Post"}
 				</button>
 			</form>
+			{(isCreateError || isUpdateError) && (
+				<p className="text-error mt-2">
+					Error: {updateError?.message || createError?.message}
+				</p>
+			)}
+			{showUpdateSuccessMessage && (
+				<div role="alert" className="alert alert-success">
+					<span>Post updated successfully!</span>
+				</div>
+			)}
+			{showCreateSuccessMessage && (
+				<div role="alert" className="alert alert-success">
+					<span>Post created successfully!</span>
+				</div>
+			)}
 		</div>
 	);
 }

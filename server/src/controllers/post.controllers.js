@@ -22,15 +22,6 @@ const allPosts = asyncHandler(async (req, res) => {
 				createdAt: -1,
 			},
 		},
-		{
-			$project: {
-				title: 1,
-				featuredImage: 1,
-				timeToRead: 1,
-				slug: 1,
-				updatedAt:1,
-			},
-		},
 	];
 
 	if (pagination) {
@@ -110,6 +101,8 @@ const getPost = asyncHandler(async (req, res) => {
 });
 
 const createPost = asyncHandler(async (req, res) => {
+	console.log(req.body);
+	console.log(req.file);
 	const { title, timeToRead, content } = req.body;
 
 	const imageLocalPath = req?.file?.path;
@@ -176,6 +169,7 @@ const updatePostData = asyncHandler(async (req, res) => {
 
 	const tags = req?.body?.tags?.split(",");
 	const postId = req.params?.postId;
+	console.log(postId);
 
 	let updateData = {
 		...(timeToRead && { timeToRead }),
@@ -226,7 +220,8 @@ const updatePostImage = asyncHandler(async (req, res) => {
 	// upload new on cloudinary -> error
 	// update in the database
 	// delete prev from db
-
+	console.log(req.body);
+	console.log(req.file);
 	const postId = req.params?.postId;
 
 	const newImageLocalPath = req?.file?.path;

@@ -18,7 +18,9 @@ router.route("/all-posts").get(verifyJWT, allPosts);
 
 router.route("/get-post/:slug").get(verifyJWT, getPost);
 
-router.route("/create").post(verifyJWT, isAdmin,upload.single('image'),createPost);
+router
+	.route("/create")
+	.post(verifyJWT, isAdmin, upload.single("image"), createPost);
 
 router.route("/update-data/:postId").patch(verifyJWT, isAdmin, updatePostData);
 
@@ -29,6 +31,5 @@ router
 router.route("/delete/:postId").delete(verifyJWT, isAdmin, deletePost);
 
 router.route("/search").get(verifyJWT, searchPost);
-
 
 export default router;
