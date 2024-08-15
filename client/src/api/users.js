@@ -4,6 +4,10 @@ const getCurrentUser = async () => {
 	return await api.get("/users/get-user");
 };
 
+const refreshToken = async () => {
+	return await api.post("/users/generate-token");
+};
+
 const allUsers = async () => {
 	return await api.get("/users/all-users");
 };
@@ -59,5 +63,6 @@ export {
 	changePassword,
 	googleAuth,
 	adminDeleteUser,
-	deleteUser
+	deleteUser,
+	refreshToken
 };
