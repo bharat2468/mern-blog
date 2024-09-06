@@ -1,12 +1,14 @@
 import React from "react";
-import { FaTrash, FaThumbsUp } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-import {Loading,Error} from "../index"
-import { format } from 'date-fns';
-import { allComments } from "../../api/comments";
+import { FaTrash } from "react-icons/fa";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loading, Error } from "../index";
+import { format } from "date-fns";
+import { allComments, deleteCommentAdmin } from "../../api/comments";
 
 const Comments = () => {
-	// Sample comment data
+	const queryClient = useQueryClient();
+
+	// Fetch all comments
 	const {
 		isLoading,
 		isError,
@@ -18,12 +20,21 @@ const Comments = () => {
 		staleTime: 1000 * 60 * 5,
 	});
 
+	const { mutate: deleteComment, isPending: isDeleting } = useMutation({
+		mutationFn: deleteCommentAdmin,
+		onSuccess: (response) => {
+			let postId = response?.data?.data?.postId;
+			queryClient.refetchQueries("all-comments");
+			queryClient.invalidateQueries(["comments", postId]);
+		},
+	});
+
 	if (isLoading) {
-		return(
+		return (
 			<div className="w-full h-[80vh] flex justify-center items-center">
 				<Loading className="w-20" />
 			</div>
-		)
+		);
 	}
 
 	if (isError) {
@@ -31,12 +42,11 @@ const Comments = () => {
 		return <Error />;
 	}
 
-	const comments = response?.data?.data
+	const comments = response?.data?.data;
 
-	// Sample delete handler
+	// Delete comment handler
 	const handleDelete = (commentId) => {
-		console.log(`Delete comment with ID: ${commentId}`);
-		// Implement actual delete logic here
+		deleteComment(commentId);
 	};
 
 	return (
@@ -52,18 +62,22 @@ const Comments = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{comments.map((comment, index) => (
-						<tr
-							key={comment._id}
-							className="hover">
-							<td>{format(new Date(comment.updatedAt), 'dd-MM-yyyy')}</td>
+					{comments.map((comment) => (
+						<tr key={comment._id} className="hover">
+							<td>
+								{format(
+									new Date(comment.updatedAt),
+									"dd-MM-yyyy"
+								)}
+							</td>
 							<td>{comment.content}</td>
 							<td>{comment.postTitle}</td>
 							<td>{comment.username}</td>
 							<td>
 								<button
 									className="btn btn-error btn-sm"
-									onClick={() => handleDelete(comment.id)}>
+									onClick={() => handleDelete(comment._id)}
+									disabled={isDeleting}>
 									<FaTrash />
 								</button>
 							</td>

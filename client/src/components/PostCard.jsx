@@ -11,7 +11,7 @@ const PostCard = ({
 		<Link to={`/post/${slug}`}>
 			<div className={`h-[400px] card bg-base-100 shadow-xl ${className}`}>
 				<figure>
-					<img className="w-full" src={featuredImage} alt="Shoes" />
+					<img className="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
 				</figure>
 				<div className="card-body">
 					<h2 className="card-title">{title}</h2>

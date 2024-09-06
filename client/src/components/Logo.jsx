@@ -6,9 +6,9 @@
 import { MountainIcon } from "./icons/icons";
 
 
-function Logo() {
+function Logo({ className }) {
 	return (
-		<div className="flex gap-1">
+		<div className={`flex gap-1 ${className}`}>
 			<MountainIcon className="w-6 h-6" />
 			<span>Bharat's Blog</span>
 		</div>

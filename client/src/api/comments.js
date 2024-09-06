@@ -13,12 +13,15 @@ const create = async (data) => {
 }
 
 const update = async (data,commentId) => {
-    return await api.post(`/comments/update/${commentId}`,data);
+    return await api.patch(`/comments/update/${commentId}`,data);
 }
 
 const deleteComment = async (commentId) => {
     return await api.delete(`/comments/delete/${commentId}`);
 }
 
+const deleteCommentAdmin = async (commentId) => {
+    return await api.delete(`/comments/delete-admin/${commentId}`);
+}
 
-export {getCommentsForPost,allComments,create,update,deleteComment}
+export {getCommentsForPost,allComments,create,update,deleteComment,deleteCommentAdmin}

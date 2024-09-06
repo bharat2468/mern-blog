@@ -19,6 +19,8 @@ function PostHeader({ post }) {
 		mutationFn: deletePost,
 		onSuccess: (response) => {
 			queryClient.refetchQueries(["posts"]);
+			queryClient.invalidateQueries("all-posts");
+			queryClient.invalidateQueries("all-comments");
 			setShowModal(true);
 			setTimeout(() => {
 				setShowModal(false);
@@ -55,7 +57,9 @@ function PostHeader({ post }) {
 					</div>
 					<div
 						className="btn btn-sm btn-outline btn-error"
-						onClick={handleDelete}>
+						onClick={handleDelete}
+						disabled={isPending}
+						>
 						Delete
 					</div>
 
@@ -86,8 +90,10 @@ function PostHeader({ post }) {
 										<button
 											type="button"
 											className="btn btn-error"
-											onClick={handleConfirmDelete}>
-											Delete Post
+											onClick={handleConfirmDelete}
+											disabled={isPending}
+											>
+											{isPending ? "Deleting..." : "Confirm"}
 										</button>
 										<button
 											type="button"

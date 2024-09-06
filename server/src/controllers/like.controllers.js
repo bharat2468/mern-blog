@@ -1,15 +1,15 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/AsyncHandler.js";
 import { Like } from "../models/like.models.js";
 import { Post } from "../models/post.models.js";
 import { Comment } from "../models/comment.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import mongoose from "mongoose";
 
 // Like a post
 const likePost = asyncHandler(async (req, res) => {
 	const postId = req.params?.postId;
 	const userId = req.user._id;
-
 
 	// Check if the post exists
 	const post = await Post.findById(postId);
@@ -35,8 +35,8 @@ const likePost = asyncHandler(async (req, res) => {
 
 // Like a comment
 const likeComment = asyncHandler(async (req, res) => {
-	const commentId  = req.params?.commentId;
-	const userId = req.user._id;
+	const commentId = new mongoose.Types.ObjectId(req.params?.commentId);
+	const userId = new mongoose.Types.ObjectId(req.user._id);
 
 	// Check if the comment exists
 	const comment = await Comment.findById(commentId);
@@ -60,13 +60,16 @@ const likeComment = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(201, like, "Like created successfully"));
 });
 
-// Delete a like
-const deleteLike = asyncHandler(async (req, res) => {
-	const likeId = req.params.likeId;
+// Unlike a Post
+const unlikePost = asyncHandler(async (req, res) => {
+	const postId = new mongoose.Types.ObjectId(req.params.postId);
 	const userId = req.user._id;
 
-	// Find and delete the like
-	const like = await Like.findOneAndDelete({ _id: likeId, userId });
+	// Find and delete the like for the post
+	const like = await Like.findOneAndDelete({
+		postId,
+		userId,
+	});
 	if (!like) {
 		throw new ApiError(
 			404,
@@ -76,7 +79,28 @@ const deleteLike = asyncHandler(async (req, res) => {
 
 	return res
 		.status(200)
-		.json(new ApiResponse(200, like, "Like deleted successfully"));
+		.json(new ApiResponse(200, like, "Like on post deleted successfully"));
 });
 
-export { likePost, likeComment, deleteLike };
+// Unlike a Comment
+const unlikeComment = asyncHandler(async (req, res) => {
+	const commentId = new mongoose.Types.ObjectId(req.params.commentId);
+	const userId = req.user._id;
+
+	// Find and delete the like for the comment
+	const like = await Like.findOneAndDelete({ commentId, userId});
+	if (!like) {
+		throw new ApiError(
+			404,
+			"Like not found or not authorized to delete this like"
+		);
+	}
+
+	return res
+		.status(200)
+		.json(
+			new ApiResponse(200, like, "Like on comment deleted successfully")
+		);
+});
+
+export { likeComment, likePost, unlikePost, unlikeComment };

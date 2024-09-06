@@ -52,6 +52,7 @@ const changePassword = async (data) => {
 	return await api.post("/users/change-password", data);
 };
 
+
 export {
 	getCurrentUser,
 	allUsers,
@@ -64,5 +65,5 @@ export {
 	googleAuth,
 	adminDeleteUser,
 	deleteUser,
-	refreshToken
+	refreshToken,
 };

@@ -6,7 +6,7 @@ import {
 	updatePostData,
 	updatePostImage,
 	deletePost,
-	searchPost,
+	// searchPost,
 } from "../controllers/post.controllers.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -30,6 +30,6 @@ router
 
 router.route("/delete/:postId").delete(verifyJWT, isAdmin, deletePost);
 
-router.route("/search").get(verifyJWT, searchPost);
+// router.route("/search").get(verifyJWT, searchPost);
 
 export default router;

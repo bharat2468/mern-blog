@@ -25,10 +25,12 @@ const Posts = () => {
 		staleTime: 1000 * 60 * 5,
 	});
 
-	const { mutate: deletePostMutation, isLoading: isDeleting } = useMutation({
+	const { mutate: deletePostMutation, isPending: isDeleting } = useMutation({
 		mutationFn: (postId) => deletePost(postId),
 		onSuccess: () => {
+			queryClient.refetchQueries(["posts"]);
 			queryClient.invalidateQueries(["all-posts"]);
+			queryClient.invalidateQueries(["all-comments"]);
 			setShowModal(true);
 			setTimeout(() => {
 				setShowModal(false);

@@ -1,92 +1,107 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchDashboardData } from "../../api/dashboard";
+import { Loading } from "../index.js";
+import { FaUser, FaCommentDots, FaFileAlt } from "react-icons/fa"; // Import icons
 
 function Dashboard() {
-	// This data should be fetched from your API
-	const stats = {
-		users: 1000,
-		comments: 5000,
-		posts: 500,
-	};
+	let {
+		isLoading,
+		isError,
+		data: response,
+		error,
+	} = useQuery({
+		queryKey: ["dashboard"],
+		queryFn: fetchDashboardData,
+	});
+	response = response?.data?.data;
 
-	const recentData = {
-		users: [
-			{ id: 1, name: "John Doe", email: "john@example.com" },
-			{ id: 2, name: "Jane Smith", email: "jane@example.com" },
-			// ... more users
-		],
-		comments: [
-			{ id: 1, user: "John Doe", content: "Great post!" },
-			{ id: 2, user: "Jane Smith", content: "Very informative." },
-			// ... more comments
-		],
-		posts: [
-			{ id: 1, title: "Introduction to React", author: "John Doe" },
-			{
-				id: 2,
-				title: "Advanced JavaScript Techniques",
-				author: "Jane Smith",
-			},
-			// ... more posts
-		],
-	};
+	if (isLoading) {
+		return (
+			<div className="w-full h-[80vh] flex justify-center items-center">
+				<Loading className="w-20" />
+			</div>
+		);
+	}
+
+	if (isError) {
+		console.error(error);
+		return <div>Error loading data...</div>;
+	}
+
+	const { userCount, commentCount, postCount, recentUsers, recentComments, recentPosts } = response;
 
 	return (
 		<div className="p-4">
-			<h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+			<h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				<div className="card bg-base-100 shadow-xl">
-					<div className="card-body">
-						<div className="stat-title">Total Users</div>
-						<div className="stat-value">{stats.users}</div>
+					<div className="card-body flex items-center space-x-4">
+						<FaUser className="text-4xl text-blue-500" />
+						<div className="flex flex-col items-center">
+							<div className="stat-title text-lg">Total Users</div>
+							<div className="stat-value text-2xl">{userCount}</div>
+						</div>
 					</div>
 				</div>
+
 				<div className="card bg-base-100 shadow-xl">
-					<div className="card-body">
-						<div className="stat-title">Total Comments</div>
-						<div className="stat-value">{stats.comments}</div>
+					<div className="card-body flex items-center space-x-4">
+						<FaCommentDots className="text-4xl text-green-500" />
+						<div className="flex flex-col items-center">
+							<div className="stat-title text-lg">Total Comments</div>
+							<div className="stat-value text-2xl">{commentCount}</div>
+						</div>
 					</div>
 				</div>
+
 				<div className="card bg-base-100 shadow-xl">
-					<div className="card-body">
-						<div className="stat-title">Total Posts</div>
-						<div className="stat-value">{stats.posts}</div>
+					<div className="card-body flex items-center space-x-4">
+						<FaFileAlt className="text-4xl text-purple-500" />
+						<div className="flex flex-col items-center">
+							<div className="stat-title text-lg">Total Posts</div>
+							<div className="stat-value text-2xl">{postCount}</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+			<div className="mt-8 grid grid-cols-1 gap-6">
 				<div className="card bg-base-100 shadow-xl">
 					<div className="card-body">
-						<h2 className="card-title">Recent Users</h2>
-						<ul>
-							{recentData.users.map((user) => (
-								<li key={user.id}>
-									{user.name} - {user.email}
+						<h2 className="card-title text-xl mb-4">Recent Users</h2>
+						<ul className="list-disc pl-5">
+							{recentUsers.map((user) => (
+								<li key={user._id} className="mb-2">
+									<span className="font-semibold">{user.username}</span> - {user.email}
 								</li>
 							))}
 						</ul>
 					</div>
 				</div>
+
 				<div className="card bg-base-100 shadow-xl">
 					<div className="card-body">
-						<h2 className="card-title">Recent Comments</h2>
-						<ul>
-							{recentData.comments.map((comment) => (
-								<li key={comment.id}>
-									{comment.user}: {comment.content}
+						<h2 className="card-title text-xl mb-4">Recent Comments</h2>
+						<ul className="list-disc pl-5">
+							{recentComments.map((comment) => (
+								<li key={comment._id} className="mb-2">
+									<span className="font-semibold">{comment.username}</span>: {comment.content}{" "}
+									on "<span className="italic">{comment.posTitle}</span>"
 								</li>
 							))}
 						</ul>
 					</div>
 				</div>
+
 				<div className="card bg-base-100 shadow-xl">
 					<div className="card-body">
-						<h2 className="card-title">Recent Posts</h2>
-						<ul>
-							{recentData.posts.map((post) => (
-								<li key={post.id}>
-									{post.title} by {post.author}
+						<h2 className="card-title text-xl mb-4">Recent Posts</h2>
+						<ul className="list-disc pl-5">
+							{recentPosts.map((post) => (
+								<li key={post._id} className="mb-2">
+									<span className="font-semibold">{post.title}</span> by {post.author}
 								</li>
 							))}
 						</ul>

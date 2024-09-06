@@ -58,4 +58,5 @@ router
 
 router.route("/admin-delete/:userId").delete(verifyJWT,isAdmin,adminDeleteUser);
 
+
 export default router;
