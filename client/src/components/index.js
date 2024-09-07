@@ -22,6 +22,7 @@ import Hero from "./Hero";
 import PostCard from "./PostCard";
 import Post from "./post/Post";
 import Unauthorized from "./Unauthorized";
+import Search from "./Search";
 export {
 	Header,
 	Footer,
@@ -46,5 +47,6 @@ export {
 	Hero,
 	PostCard,
 	Post,
-	Unauthorized
+	Unauthorized,
+	Search,
 };

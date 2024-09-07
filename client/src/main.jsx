@@ -15,6 +15,7 @@ import {
 	Post,
 	Signup,
 	Profile,
+	Search,
 } from "./pages/index.js";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
@@ -116,6 +117,14 @@ const router = createBrowserRouter([
 				element: (
 					<Protected authentication={true}>
 						<Profile />
+					</Protected>
+				),
+			},
+			{
+				path:"/search",
+				element:(
+					<Protected authentication={true}>
+						<Search />
 					</Protected>
 				),
 			},

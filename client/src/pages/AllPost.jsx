@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { allPosts } from "../api/posts";
 import { Container, Error, Loading, PostCard } from "../components";
 import { useQuery } from "@tanstack/react-query";
+import { FiSearch } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const AllPost = () => {
 	const [page, setPage] = useState(1);
@@ -17,6 +19,8 @@ const AllPost = () => {
 		queryKey: ["posts", page],
 		queryFn: () => allPosts(page, limit,true),
 		keepPreviousData: true,
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
 		staleTime: 1000 * 60 * 5,
 	});
 
@@ -37,7 +41,7 @@ const AllPost = () => {
 
 	return (
 		<Container className="my-10">
-			<div className="flex justify-center mb-6">
+			<div className="flex justify-center mb-6 relative">
 				<button
 					onClick={() => setPage((old) => Math.max(old - 1, 1))}
 					disabled={page === 1}
@@ -57,7 +61,9 @@ const AllPost = () => {
 					className="btn btn-primary">
 					Next
 				</button>
+				<Link to="/search" className="btn btn-primary absolute top-0 right-20"><FiSearch/> </Link>
 			</div>
+			
 			<div className="grid grid-cols-2 gap-6 px-20">
 				{posts?.map((post) => (
 					<PostCard key={post._id} {...post} className="basis-1/3" />

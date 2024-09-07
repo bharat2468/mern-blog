@@ -25,23 +25,34 @@ const deletePost = async (postId) => {
 	return await api.delete(`/posts/delete/${postId}`);
 };
 
-const allPosts = async (page = 1, limit = 9, pagination,searchString) => {
+const allPosts = async (page = 1, limit = 10, pagination, searchString) => {
 	return await api.get(
 		`/posts/all-posts?page=${page}&limit=${limit}&pagination=${pagination}&searchString=${searchString}`
 	);
+};
+
+const searchPosts = async (
+	page,
+	limit,
+	searchString,
+	startDate,
+	endDate
+) => {
+	return await api.get("/posts/search", {
+		params: {
+			page,
+			limit,
+			searchString,
+			startDate,
+			endDate,
+		},
+	});
 };
 
 const getPost = async (slug) => {
 	return await api.get(`/posts/get-post/${slug}`);
 };
 
-const searchPosts = async (query) => {
-	const { searchString } = query;
-	return await api.get(
-		`/posts/search?searchString=${searchString}`
-	);
-
-};
 
 export {
 	createPost,

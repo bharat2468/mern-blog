@@ -49,7 +49,7 @@ function PostForm() {
 	} = useMutation({
 		mutationFn: ({ data, postId }) => updatePostData(data, postId),
 		onSuccess: (response) => {
-			queryClient.invalidateQueries(["posts"]);
+			queryClient.refetchQueries(["posts"]);
 			queryClient.refetchQueries(["post", post.slug]);
 			console.log(post.slug);
 			setShowUpdateSuccessMessage(true);
@@ -69,7 +69,7 @@ function PostForm() {
 	} = useMutation({
 		mutationFn: createPost,
 		onSuccess: (response) => {
-			queryClient.invalidateQueries(["posts"]);
+			queryClient.refetchQueries(["posts"]);
 			setShowCreateSuccessMessage(true);
 			setTimeout(() => {
 				setShowCreateSuccessMessage(false);

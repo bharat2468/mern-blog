@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/AsyncHandler.js";
 import { Post } from "../models/post.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -7,6 +7,7 @@ import {
 	uploadOnCloudinary,
 } from "../utils/cloudinary.js";
 import slugify from "slugify";
+import mongoose from "mongoose";
 
 const allPosts = asyncHandler(async (req, res) => {
 	const pagination = req.query.pagination === "true";
@@ -46,9 +47,10 @@ const allPosts = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, response, "Posts returned successfully"));
 });
 
-
 const getPost = asyncHandler(async (req, res) => {
 	const slug = req.params?.slug;
+	const userId = req.user?._id;
+	console.log(userId);
 
 	const pipeline = [
 		// Match the specific post by ID
@@ -66,10 +68,16 @@ const getPost = asyncHandler(async (req, res) => {
 				as: "postLikes",
 			},
 		},
-		// Add a field for the post likes count
+		// Add fields for likes count and isLiked
 		{
 			$addFields: {
 				likesCount: { $size: "$postLikes" },
+				isLiked: {
+					$in: [
+						new mongoose.Types.ObjectId(userId),
+						"$postLikes.userId",
+					],
+				},
 			},
 		},
 		// Project to shape the final post data
@@ -85,6 +93,7 @@ const getPost = asyncHandler(async (req, res) => {
 				createdAt: 1,
 				updatedAt: 1,
 				likesCount: 1,
+				isLiked: 1,
 			},
 		},
 	];
@@ -265,59 +274,88 @@ const updatePostImage = asyncHandler(async (req, res) => {
 const deletePost = asyncHandler(async (req, res) => {
 	const postId = req.params?.postId;
 
+	// Find and delete the post
 	const deletedPost = await Post.findByIdAndDelete(postId);
 
 	if (!deletedPost) {
 		throw new ApiError(
-			500,
-			"Post does not exist or Something went wrong while deleting the post"
+			404,
+			"Post does not exist or something went wrong while deleting the post"
 		);
+	}
+	// Extract image URL and public ID
+	const imageUrl = deletedPost.featuredImage;
+	const publicId = imageUrl
+		? imageUrl.split("/").slice(-1)[0].split(".")[0]
+		: null;
+
+	// Delete the image from Cloudinary
+	if (publicId) {
+		await deleteFromCloudinary(publicId);
 	}
 
 	return res
 		.status(200)
-		.json(new ApiResponse(200, deletedPost, "post deleted successfully"));
+		.json(new ApiResponse(200, deletedPost, "Post deleted successfully"));
 });
 
 const searchPost = asyncHandler(async (req, res) => {
-	const { searchString, dateFrom, dateTo } = req.query;
+	const { searchString, startDate, endDate } = req.query;
+	const page = parseInt(req.query.page) || 1;
+	const limit = parseInt(req.query.limit) || 10;
+	const skip = (page - 1) * limit;
 
-	// Build the aggregation pipeline
-	let pipeline = [];
+	let pipeline = [
+		{
+			$sort: {
+				createdAt: -1,
+			},
+		},
+	];
 
-	// Match stage for title or tags
-	if (searchString) {
+	// Match stage for search query and date filter
+	if (searchString && searchString.trim().length > 0) {
 		pipeline.push({
 			$match: {
 				$or: [
-					{ title: { $regex: searchString, $options: "i" } }, // Case-insensitive search in title
-					{ tags: { $regex: searchString, $options: "i" } }, // Case-insensitive search in tags
+					{ title: { $regex: searchString, $options: "i" } },
+					{ tags: { $regex: searchString, $options: "i" } },
 					{ slug: { $regex: searchString, $options: "i" } },
 				],
 			},
 		});
 	}
 
-	// Match stage for date range
-	if (dateFrom || dateTo) {
-		let dateMatch = {};
-		if (dateFrom) dateMatch.$gte = new Date(dateFrom);
-		if (dateTo) dateMatch.$lte = new Date(dateTo);
-		console.log(dateMatch);
+	if (startDate || endDate) {
 		pipeline.push({
 			$match: {
-				createdAt: dateMatch,
+				createdAt: {
+					...(startDate && { $gte: new Date(startDate) }),
+					...(endDate && { $lte: new Date(endDate) }),
+				},
 			},
 		});
 	}
 
-	// Execute the aggregation pipeline
+	// Count total posts
+	const totalPosts = await Post.aggregate([...pipeline, { $count: "total" }]);
+
+	// Pagination stages
+	pipeline.push({ $skip: skip });
+	pipeline.push({ $limit: limit });
+
 	const posts = await Post.aggregate(pipeline);
 
-	// Send the matched posts as a response
+	const response = {
+		posts,
+		totalPosts: totalPosts[0]?.total || 0,
+		currentPage: page,
+		totalPages: Math.ceil((totalPosts[0]?.total || 0) / limit),
+	};
+
 	return res
 		.status(200)
-		.json(new ApiResponse(200, posts, "Fetched posts successfully"));
+		.json(new ApiResponse(200, response, "Posts returned successfully"));
 });
 
 export {

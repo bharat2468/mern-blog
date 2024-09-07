@@ -5,6 +5,7 @@ import AddOrUpdatePost from "./AddOrUpdatePost";
 import AllPost from "./AllPost";
 import Post from "./Post";
 import Profile from "./Profile";
+import Search from "./Search";
 
 export {
     Home,
@@ -13,5 +14,6 @@ export {
     AddOrUpdatePost,
     AllPost,
     Post,
-    Profile
+    Profile,
+    Search,
 }
