@@ -66,7 +66,7 @@ const Users = () => {
 
 
 	return (
-		<div className="overflow-x-auto">
+		<div className="overflow-x-auto min-h-screen">
 			{successMessage && (
 				<div className="alert alert-success my-5">
 					<div>

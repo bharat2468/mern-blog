@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { login as loginAction } from "../store/authSlice";
 import { Input, Logo } from "./index";
 import { signUp } from "../api/users";
 import { useMutation } from "@tanstack/react-query";
 import GoogleButton from "./GoogleButton";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+
 
 function Signup() {
 	const navigate = useNavigate();
 	const [avatarPreview, setAvatarPreview] = useState(null);
-	const [isLoadingLocal, setIsLoadingLocal] = useState(false);
 	const [registrationSuccess, setRegistrationSuccess] = useState(false);
+	const [passwordVisible, setPasswordVisible] = useState(false);
+
 
 	const {
 		register,
@@ -51,6 +52,11 @@ function Signup() {
 
 	const create = async (data) => {
 		mutate(data);
+	};
+
+	// Toggle password visibility
+	const togglePasswordVisibility = () => {
+		setPasswordVisible(!passwordVisible);
 	};
 
 	return (
@@ -141,25 +147,36 @@ function Signup() {
 								{errors.email.message}
 							</p>
 						)}
-
-						<Input
-							label="Password:"
-							type="password"
-							placeholder="Enter your password"
-							{...register("password", {
-								required: "Password is required",
-								minLength: {
-									value: 8,
-									message:
-										"Password must be at least 8 characters long",
-								},
-								pattern: {
-									value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-									message:
-										"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-								},
-							})}
-						/>
+						<div className="relative">
+							<Input
+								label="Password:"
+								type="password"
+								placeholder="Enter your password"
+								{...register("password", {
+									required: "Password is required",
+									minLength: {
+										value: 8,
+										message:
+											"Password must be at least 8 characters long",
+									},
+									pattern: {
+										value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+										message:
+											"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+									},
+								})}
+							/>
+							<button
+								type="button"
+								className="absolute right-4 top-1/2 text-2xl"
+								onClick={togglePasswordVisibility}>
+								{passwordVisible ? (
+									<AiOutlineEyeInvisible />
+								) : (
+									<AiOutlineEye />
+								)}
+							</button>
+						</div>
 						{errors.password && (
 							<p className="text-error text-sm">
 								{errors.password.message}
@@ -211,7 +228,9 @@ const RegistrationSuccessful = () => {
 					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 				/>
 			</svg>
-			<span>Registration successful! Kindly Login with new credentials</span>
+			<span>
+				Registration successful! Kindly Login with new credentials
+			</span>
 		</div>
 	);
 };

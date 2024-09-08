@@ -88,7 +88,7 @@ function Dashboard() {
 							{recentComments.map((comment) => (
 								<li key={comment._id} className="mb-2">
 									<span className="font-semibold">{comment.username}</span>: {comment.content}{" "}
-									on "<span className="italic">{comment.posTitle}</span>"
+									on "<span className="italic">{comment.postTitle}</span>"
 								</li>
 							))}
 						</ul>
@@ -101,7 +101,7 @@ function Dashboard() {
 						<ul className="list-disc pl-5">
 							{recentPosts.map((post) => (
 								<li key={post._id} className="mb-2">
-									<span className="font-semibold">{post.title}</span> by {post.author}
+									<span className="font-semibold">{post.title}</span>
 								</li>
 							))}
 						</ul>

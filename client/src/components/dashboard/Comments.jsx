@@ -50,7 +50,7 @@ const Comments = () => {
 	};
 
 	return (
-		<div className="overflow-x-auto">
+		<div className="overflow-x-auto min-h-screen">
 			<table className="table">
 				<thead>
 					<tr className="bg-base-200">

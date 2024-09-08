@@ -13,7 +13,7 @@ function AdminDashboard() {
 				{/* Page content here */}
 				<label
 					htmlFor="my-drawer-2"
-					className="btn btn-primary drawer-button lg:hidden">
+					className="btn btn-primary drawer-button lg:hidden mx-4">
 					Open drawer
 				</label>
 				<div className="p-4">

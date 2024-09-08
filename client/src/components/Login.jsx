@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -7,10 +7,12 @@ import {Input,Logo} from './index';
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../api/users";
 import GoogleButton from './GoogleButton';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 function Login() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const [passwordVisible, setPasswordVisible] = useState(false);
 
 	const {
 		register,
@@ -34,6 +36,11 @@ function Login() {
 
 	const onSubmit = (formData) => {
 		mutate(formData);
+	};
+
+	// Toggle password visibility
+	const togglePasswordVisibility = () => {
+		setPasswordVisible(!passwordVisible);
 	};
 
 	return (
@@ -82,20 +89,32 @@ function Login() {
 							</p>
 						)}
 
-						<Input
-							label="Password:"
-							type="password"
-							placeholder="Enter your password"
-							{...register("password", {
-								required: "Password is required",
-							})}
-						/>
+						<div className="relative">
+							<Input
+								label="Password:"
+								type={passwordVisible ? "text" : "password"}
+								placeholder="Enter your password"
+								{...register("password", {
+									required: "Password is required",
+								})}
+							/>
+							<button
+								type="button"
+								className="absolute right-4 top-1/2 text-2xl"
+								onClick={togglePasswordVisibility}>
+								{passwordVisible ? (
+									<AiOutlineEyeInvisible/>
+								) : (
+									<AiOutlineEye />
+								)}
+							</button>
+						</div>
 						{errors.password && (
 							<p className="text-error text-sm">
 								{errors.password.message}
 							</p>
 						)}
-
+{/* 
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
 								<input
@@ -115,7 +134,7 @@ function Login() {
 								className="text-sm link link-primary">
 								Forgot password?
 							</Link>
-						</div>
+						</div> */}
 
 						<button
 							type="submit"
@@ -129,7 +148,7 @@ function Login() {
 					{isError && (
 						<p className="text-error text-sm mt-2">
 							Login failed:{" "}
-							{error.message ||
+							{error.response.data.message ||
 								"Please check your credentials and try again."}
 						</p>
 					)}

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { searchPosts } from "../api/posts";
-import { PostCard, Error, Loading,Input } from "../components";
+import { PostCard, Error, Loading, Input } from "../components";
 import { FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
@@ -16,6 +16,7 @@ const Search = () => {
 		handleSubmit,
 		formState: { errors },
 		getValues,
+		reset,
 	} = useForm({
 		defaultValues: {
 			searchString: "",
@@ -26,7 +27,7 @@ const Search = () => {
 
 	// Helper function to check if a date is in YYYY-MM-DD format
 	const isValidDate = (dateString) => {
-		if(dateString === "") return true;
+		if (dateString === "") return true;
 		const regex = /^\d{4}-\d{2}-\d{2}$/;
 		return regex.test(dateString);
 	};
@@ -54,7 +55,6 @@ const Search = () => {
 	const onSearchSubmit = () => {
 		setPage(1);
 		queryClient.refetchQueries(["searchPosts", page]);
-		
 	};
 
 	if (isLoading) {
@@ -70,9 +70,9 @@ const Search = () => {
 		return <Error />;
 	}
 	console.log(response);
-	
 
-	const { posts, currentPage, totalPages, totalPosts } = response?.data?.data || {};
+	const { posts, currentPage, totalPages, totalPosts } =
+		response?.data?.data || {};
 
 	return (
 		<div className="drawer lg:drawer-open min-h-screen">
@@ -85,7 +85,7 @@ const Search = () => {
 					Open drawer
 				</label>
 
-                {/* Pagination */}
+				{/* Pagination */}
 				<div className="flex justify-center mt-6 relative">
 					<button
 						onClick={() => setPage((old) => Math.max(old - 1, 1))}
@@ -104,7 +104,15 @@ const Search = () => {
 						className="btn btn-primary">
 						Next
 					</button>
-					<Link to="/all-posts" className="btn btn-primary absolute right-0 top-0">Show all Posts</Link>
+					<Link
+						to="/all-posts"
+						className="btn btn-primary absolute right-0 top-0"
+						onClick={() => {
+							reset();
+							queryClient.refetchQueries(["searchPosts", page]);
+						}}>
+						Show all Posts
+					</Link>
 				</div>
 
 				<h2 className="text-3xl my-6">Post Results</h2>
@@ -123,8 +131,6 @@ const Search = () => {
 						</p>
 					)}
 				</div>
-
-				
 			</div>
 			<div className="drawer-side">
 				<label
@@ -158,7 +164,6 @@ const Search = () => {
 							<Input
 								type="date"
 								{...register("startDate", {
-									
 									validate: (value) =>
 										isValidDate(value)
 											? true
@@ -179,7 +184,6 @@ const Search = () => {
 							<Input
 								type="date"
 								{...register("endDate", {
-									
 									validate: {
 										isValidFormat: (value) =>
 											isValidDate(value) ||
