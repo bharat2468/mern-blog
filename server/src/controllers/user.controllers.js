@@ -83,6 +83,7 @@ const googleAuthHandler = asyncHandler(async (req, res) => {
 	const options = {
 		httpOnly: true,
 		secure: true,
+		sameSite: 'None',
 	};
 
 	const userObject = user.toObject();
@@ -194,6 +195,7 @@ const loginUser = asyncHandler(async (req, res) => {
 	const options = {
 		httpOnly: true,
 		secure: true,
+		sameSite: 'None',
 	};
 
 	const userObject = user.toObject(); // Convert to plain object
@@ -238,6 +240,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 	const options = {
 		httpOnly: true,
 		secure: true,
+		sameSite: 'None',
 	};
 
 	return res
@@ -329,6 +332,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 		const options = {
 			httpOnly: true,
 			secure: true,
+			sameSite: 'None',
 		};
 
 		res.status(200)
@@ -415,6 +419,8 @@ const updateUserFields = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
+	console.log(req.cookies);
+	
 	return res.status(200).json(
 		new ApiResponse(
 			200,
