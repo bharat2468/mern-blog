@@ -48,7 +48,7 @@ function PostHeader({ post }) {
 		<div className="relative mb-8 overflow-hidden rounded-xl mx-auto">
 			{isAdmin && (
 				<div className="flex gap-x-4 my-4 justify-end relative">
-					<BackButton className="absolute -left-3 -top-5 z-10"/>
+					<BackButton className="absolute -left-3 -top-5"/>
 					<div
 						className="btn btn-sm btn-outline btn-accent"
 						onClick={() => {
