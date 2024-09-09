@@ -9,9 +9,9 @@ const PostCard = ({
 }) => {
 	return (
 		<Link to={`/post/${slug}`}>
-			<div className={`h-[400px] card bg-base-100 shadow-xl ${className}`}>
+			<div className={`h-[300px] card bg-base-100 shadow-xl ${className}`}>
 				<figure>
-					<img className="w-full" src={featuredImage} alt="Shoes" />
+					<img className="w-full " src={featuredImage} alt="Shoes" />
 				</figure>
 				<div className="card-body">
 					<h2 className="card-title">{title}</h2>

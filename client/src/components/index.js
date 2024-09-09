@@ -23,6 +23,7 @@ import PostCard from "./PostCard";
 import Post from "./post/Post";
 import Unauthorized from "./Unauthorized";
 import Search from "./Search";
+import BackButton from "./BackButton";
 export {
 	Header,
 	Footer,
@@ -49,4 +50,5 @@ export {
 	Post,
 	Unauthorized,
 	Search,
+	BackButton
 };

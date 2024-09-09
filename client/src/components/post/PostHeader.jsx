@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../../api/posts";
-import {Input} from "../index"; // Assuming your Input component is correctly imported
+import {BackButton, Input} from "../index"; // Assuming your Input component is correctly imported
 
 function PostHeader({ post }) {
 	const user = useSelector((state) => state.auth.user);
@@ -47,7 +47,8 @@ function PostHeader({ post }) {
 	return (
 		<div className="relative mb-8 overflow-hidden rounded-xl mx-auto">
 			{isAdmin && (
-				<div className="flex gap-x-4 my-4 justify-end">
+				<div className="flex gap-x-4 my-4 justify-end relative">
+					<BackButton className="absolute -left-3 -top-5 z-10"/>
 					<div
 						className="btn btn-sm btn-outline btn-accent"
 						onClick={() => {

@@ -17,7 +17,7 @@ const AllPost = () => {
 		isPreviousData,
 	} = useQuery({
 		queryKey: ["posts", page],
-		queryFn: () => allPosts(page, limit,true),
+		queryFn: () => allPosts(page, limit, true),
 		keepPreviousData: true,
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
@@ -25,11 +25,11 @@ const AllPost = () => {
 	});
 
 	if (isLoading) {
-		return(
+		return (
 			<div className="w-full h-[80vh] flex justify-center items-center">
 				<Loading className="w-20" />
 			</div>
-		)
+		);
 	}
 
 	if (isError) {
@@ -41,6 +41,11 @@ const AllPost = () => {
 
 	return (
 		<Container className="my-10">
+			<div className="flex justify-center items-center md:hidden">
+				<Link to="/search" className="btn btn-primary ">
+					<FiSearch />{" "}
+				</Link>
+			</div>
 			<div className="flex justify-center mb-6 relative">
 				<button
 					onClick={() => setPage((old) => Math.max(old - 1, 1))}
@@ -61,12 +66,16 @@ const AllPost = () => {
 					className="btn btn-primary">
 					Next
 				</button>
-				<Link to="/search" className="btn btn-primary absolute top-0 right-20"><FiSearch/> </Link>
+				<Link
+					to="/search"
+					className="btn btn-primary absolute top-0 right-20 max-md:hidden">
+					<FiSearch />{" "}
+				</Link>
 			</div>
-			
-			<div className="grid grid-cols-2 gap-6 px-20">
+
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-5 md:px-10 lg:px-20">
 				{posts?.map((post) => (
-					<PostCard key={post._id} {...post} className="basis-1/3" />
+					<PostCard key={post._id} {...post} className="w-full" />
 				))}
 			</div>
 		</Container>

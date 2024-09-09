@@ -31,7 +31,7 @@ function AvatarUpload() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center">
-            <div className="avatar mb-4 max-w-[150px] my-5">
+            <div className="avatar mb-4 max-w-[150px] max-md:w-[70%] my-5">
                 <div className="rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img
                         src={avatar || "https://img.daisyui.com/images/stock/photo-1567653418876-5bb0e566e1c2.webp"}
@@ -42,7 +42,7 @@ function AvatarUpload() {
 
             <input
                 type="file"
-                className="file-input file-input-bordered w-full max-w-xs mb-4"
+                className="file-input file-input-bordered w-full max-md:file-input-xs max-w-xs mb-4"
                 disabled={isPending}
                 {...register("avatar", {
                     required: "Please select an image",

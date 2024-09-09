@@ -49,7 +49,7 @@ function App() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex justify-center items-center">
+            <div className="min-h-screen flex justify-center bg-base-100 items-center">
                 <Loading className="w-32" />
             </div>
         );

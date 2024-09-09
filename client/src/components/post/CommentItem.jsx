@@ -127,7 +127,7 @@ function CommentItem({ comment, onCommentDeleted }) {
 											"Comment must be at least 3 characters long",
 									},
 								})}
-								className="w-full p-2 border rounded"
+								className="w-full max-w-lg h-24 max-h-32 p-2 border rounded-md"
 							/>
 							{errors.content && (
 								<p className="text-red-500 text-sm mt-1">
@@ -137,6 +137,7 @@ function CommentItem({ comment, onCommentDeleted }) {
 							<div className="mt-2">
 								<button
 									type="submit"
+									disabled={editMutation.isPending}
 									className="btn btn-primary btn-sm mr-2">
 									Save
 								</button>
@@ -170,14 +171,15 @@ function CommentItem({ comment, onCommentDeleted }) {
 							<>
 								<button
 									onClick={handleEdit}
-									disabled={isEditing}
+									disabled={editMutation.isPending}
 									className="mr-4 inline-flex items-center">
-									<FaEdit className="mr-1" /> Edit
+									<FaEdit className="mr-1" /> {editMutation.isPending ? "Editing..." : "Edit"}
 								</button>
 								<button
 									onClick={handleDelete}
+									disabled={deleteMutation.isPending}
 									className="inline-flex items-center text-red-500">
-									<FaTrash className="mr-1" /> Delete
+									<FaTrash className="mr-1" /> {deleteMutation.isPending ? "Deleting..." : "Delete"}
 								</button>
 							</>
 						)}

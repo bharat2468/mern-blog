@@ -40,15 +40,15 @@ function PostContent({ post }) {
 			<h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
 				{post.title}
 			</h1>
-			<div className="flex items-center space-x-4 text-sm text-muted">
+			<div className="flex max-md:flex-col md:items-center md:space-x-4 text-sm text-muted">
 				<div>
-					<FaRegCalendarAlt className="mr-1 inline-block h-4 w-4" />
+					<FaRegCalendarAlt className="md:mr-1 inline-block h-4 w-4" />
 					<time dateTime={post.createdAt}>
 						{new Date(post.createdAt).toLocaleDateString()}
 					</time>
 				</div>
 				<div>
-					<FaRegCalendarAlt className="mr-1 inline-block h-4 w-4" />
+					<FaRegCalendarAlt className="md:mr-1 inline-block h-4 w-4" />
 					<time dateTime={post.updatedAt}>
 						Updated on {new Date(post.updatedAt).toLocaleDateString()}
 					</time>

@@ -146,7 +146,6 @@ import { useSelector } from "react-redux";
 import { Loading, Error } from "../index";
 import { getCommentsForPost, create, update } from "../../api/comments";
 
-
 function CommentSection({ postId }) {
 	const [page, setPage] = useState(1);
 	const limit = 4; // Adjust as needed
@@ -268,9 +267,12 @@ function CommentSection({ postId }) {
 					<textarea
 						{...register("content", {
 							required: "Comment is required",
+							maxLength: {
+								value: 300, // Set your desired max length here
+								message: "Comment cannot exceed 200 characters", // Custom error message
+							},
 						})}
-						className="w-full p-2 border rounded-md"
-						rows="3"
+						className="w-full max-w-lg h-24 max-h-32 p-2 border rounded-md" // Control width and height
 						placeholder="Add a comment..."
 						disabled={isPending} // Disable textarea during submission
 					></textarea>

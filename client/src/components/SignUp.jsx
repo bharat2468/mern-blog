@@ -150,7 +150,7 @@ function Signup() {
 						<div className="relative">
 							<Input
 								label="Password:"
-								type="password"
+								type={passwordVisible ? "text" : "password"}
 								placeholder="Enter your password"
 								{...register("password", {
 									required: "Password is required",
