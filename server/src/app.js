@@ -8,7 +8,7 @@ const app = express();
 //? CORS config
 const corsOptions = {
 	origin: process.env.ALLOWED_ORIGINS,
-	credentials: process.env.CREDENTIALS,
+	credentials: process.env.CREDENTIALS === 'true',
 	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 };
 
