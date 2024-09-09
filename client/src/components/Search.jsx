@@ -85,6 +85,16 @@ const Search = () => {
 					Open drawer
 				</label>
 
+				<Link
+					to="/all-posts"
+					className="btn btn-primary my-3 md:absolute md:right-0 md:top-0 md:hidden"
+					onClick={() => {
+						reset();
+						queryClient.refetchQueries(["searchPosts", page]);
+					}}>
+					Show all Posts
+				</Link>
+
 				{/* Pagination */}
 				<div className="flex justify-center mt-6 relative">
 					<button
@@ -94,7 +104,7 @@ const Search = () => {
 						Previous
 					</button>
 					<span className="px-4 py-2">
-						Page {currentPage} of {totalPages} (Total: {totalPosts})
+						Page {currentPage} of {totalPages}
 					</span>
 					<button
 						onClick={() =>
@@ -104,19 +114,20 @@ const Search = () => {
 						className="btn btn-primary">
 						Next
 					</button>
+
 					<Link
-						to="/all-posts"
-						className="btn btn-primary absolute right-0 top-0"
-						onClick={() => {
-							reset();
-							queryClient.refetchQueries(["searchPosts", page]);
-						}}>
-						Show all Posts
-					</Link>
+					to="/all-posts"
+					className="btn btn-primary md:absolute md:right-0 md:top-0 max-md:hidden"
+					onClick={() => {
+						reset();
+						queryClient.refetchQueries(["searchPosts", page]);
+					}}>
+					Show all Posts
+				</Link>
 				</div>
 
 				<h2 className="text-3xl my-6">Post Results</h2>
-				<div className="grid grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-5 md:px-10 lg:px-20">
 					{posts?.length ? (
 						posts.map((post) => (
 							<PostCard
