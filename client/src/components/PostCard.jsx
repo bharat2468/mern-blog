@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const PostCard = ({
@@ -7,9 +8,11 @@ const PostCard = ({
 	slug = "contact",
 	className=""
 }) => {
+	const theme = useSelector((state) => state.ui.theme);
+	const add = theme === "dark" ? "shadow-lg shadow-gray-700" : "shadow-xl";
 	return (
 		<Link to={`/post/${slug}`}>
-			<div className={`h-[300px] card bg-base-100 shadow-xl ${className}`}>
+			<div className={`h-[300px] card bg-base-100 ${className} ${add}`}>
 				<figure>
 					<img className="w-full " src={featuredImage} alt="Shoes" />
 				</figure>

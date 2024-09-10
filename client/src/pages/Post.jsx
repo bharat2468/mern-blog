@@ -20,9 +20,12 @@ const Post = () => {
 	});
 
 	if (isLoading) {
-		return <Loading />;
+		return (
+			<div className="w-full h-[80vh] flex justify-center items-center">
+				<Loading className="w-20" />
+			</div>
+		);
 	}
-
 	if (isError) {
 		console.error(error);
 		return <Error />;

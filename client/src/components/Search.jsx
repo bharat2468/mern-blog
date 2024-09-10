@@ -127,7 +127,7 @@ const Search = () => {
 				</div>
 
 				<h2 className="text-3xl my-6">Post Results</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-5 md:px-10 lg:px-20">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2 md:px-10 lg:px-20">
 					{posts?.length ? (
 						posts.map((post) => (
 							<PostCard

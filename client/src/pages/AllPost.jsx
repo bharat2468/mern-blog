@@ -73,7 +73,7 @@ const AllPost = () => {
 				</Link>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-5 md:px-10 lg:px-20">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 md:px-10 lg:px-20">
 				{posts?.map((post) => (
 					<PostCard key={post._id} {...post} className="w-full" />
 				))}
