@@ -4,11 +4,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { searchPosts } from "../api/posts";
 import { PostCard, Error, Loading, Input } from "../components";
 import { FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Search = () => {
 	const queryClient = useQueryClient();
-	const [page, setPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const page = parseInt(searchParams.get("page")) || 1; // Get 'page' from URL
 	const limit = 10;
 
 	const {
@@ -53,8 +54,13 @@ const Search = () => {
 	});
 
 	const onSearchSubmit = () => {
-		setPage(1);
+		setSearchParams({ page: 1 }); // Reset to page 1 on search
 		queryClient.refetchQueries(["searchPosts", page]);
+	};
+
+	// Handle pagination by setting 'page' in the URL
+	const goToPage = (newPage) => {
+		setSearchParams({ page: newPage });
 	};
 
 	if (isLoading) {
@@ -69,16 +75,13 @@ const Search = () => {
 		console.error(error);
 		return <Error />;
 	}
-	console.log(response);
 
-	const { posts, currentPage, totalPages, totalPosts } =
-		response?.data?.data || {};
+	const { posts, currentPage, totalPages } = response?.data?.data || {};
 
 	return (
 		<div className="drawer lg:drawer-open min-h-screen">
 			<input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 			<div className="drawer-content flex flex-col ">
-				{/* Page content here */}
 				<label
 					htmlFor="my-drawer-2"
 					className="btn btn-primary drawer-button lg:hidden">
@@ -98,7 +101,7 @@ const Search = () => {
 				{/* Pagination */}
 				<div className="flex justify-center mt-6 relative">
 					<button
-						onClick={() => setPage((old) => Math.max(old - 1, 1))}
+						onClick={() => goToPage(Math.max(currentPage - 1, 1))}
 						disabled={page === 1}
 						className="btn btn-primary">
 						Previous
@@ -107,23 +110,21 @@ const Search = () => {
 						Page {currentPage} of {totalPages}
 					</span>
 					<button
-						onClick={() =>
-							setPage((old) => (old < totalPages ? old + 1 : old))
-						}
+						onClick={() => goToPage(currentPage + 1)}
 						disabled={page === totalPages}
 						className="btn btn-primary">
 						Next
 					</button>
 
 					<Link
-					to="/all-posts"
-					className="btn btn-primary md:absolute md:right-0 md:top-0 max-md:hidden"
-					onClick={() => {
-						reset();
-						queryClient.refetchQueries(["searchPosts", page]);
-					}}>
-					Show all Posts
-				</Link>
+						to="/all-posts"
+						className="btn btn-primary md:absolute md:right-0 md:top-0 max-md:hidden"
+						onClick={() => {
+							reset();
+							queryClient.refetchQueries(["searchPosts", page]);
+						}}>
+						Show all Posts
+					</Link>
 				</div>
 
 				<h2 className="text-3xl my-6">Post Results</h2>
@@ -149,7 +150,6 @@ const Search = () => {
 					aria-label="close sidebar"
 					className="drawer-overlay"></label>
 				<ul className="menu bg-base-100 text-base-content min-h-full w-80 p-4 mr-5">
-					{/* Sidebar content here */}
 					<h2 className="text-2xl mb-4">Search Filters</h2>
 					<form onSubmit={handleSubmit(onSearchSubmit)}>
 						<div className="mb-4">

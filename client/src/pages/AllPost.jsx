@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { allPosts } from "../api/posts";
 import { Container, Error, Loading, PostCard } from "../components";
 import { useQuery } from "@tanstack/react-query";
 import { FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const AllPost = () => {
-	const [page, setPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const currentPageFromUrl = parseInt(searchParams.get("page") || "1", 10); // Get page from URL
+	const [page, setPage] = useState(currentPageFromUrl);
 	const limit = 10; // You can adjust this value as needed
+
+	useEffect(() => {
+		// Sync the page state with the URL
+		setSearchParams({ page });
+	}, [page, setSearchParams]);
 
 	const {
 		isLoading,
