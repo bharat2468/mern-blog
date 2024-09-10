@@ -84,8 +84,11 @@ function PostForm() {
 	// ?navigate to the new post page
 	// ?error handling
 
+	const [buttonDisable, setButtonDisable] = useState(false);
+
 	const submit = async (data) => {
 		console.log(data);
+		setButtonDisable(true);
 
 		const formData = new FormData();
 		formData.append("title", data.title);
@@ -209,8 +212,14 @@ function PostForm() {
 				<button
 					type="submit"
 					className={`btn ${post ? "btn-success" : "btn-primary"} w-full mt-4`}
-					disabled={isCreating || isUpdating}>
-					{post ? "Update Post" : "Create Post"}
+					disabled={buttonDisable}>
+					{post
+						? isUpdating
+							? "Updating post..."
+							: "Update Post"
+						: isCreating
+							? "Creating post...."
+							: "Create Post"}
 				</button>
 			</form>
 			{(isCreateError || isUpdateError) && (
