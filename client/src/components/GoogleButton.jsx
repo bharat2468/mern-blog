@@ -10,10 +10,6 @@ const queryClient = useQueryClient()
 	const { mutate } = useMutation({
 		mutationFn: googleAuth,
 		onSuccess: (data) => {
-			console.log(
-				`${isSignUp ? "Sign-up" : "Sign-in"} successful:`,
-				data
-			);
 			queryClient.refetchQueries({
 				queryKey:['currentUser'],
 				type:"active"
@@ -31,7 +27,7 @@ const queryClient = useQueryClient()
 		<div className="flex justify-center">
 			<GoogleLogin
 				onSuccess={(credentialResponse) => {
-					console.log(credentialResponse);
+				
 					mutate(credentialResponse?.credential);
 				}}
 				onError={() => {

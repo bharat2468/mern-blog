@@ -47,7 +47,6 @@ const uploadOnCloudinary = async (localFilePath) => {
 		});
 
 		// File has been uploaded successfully
-		console.log("file is uploaded on cloudinary ", response.url);
 		fs.unlinkSync(localFilePath); // Delete the local file after upload
 		return response;
 	} catch (error) {
@@ -62,7 +61,6 @@ const deleteFromCloudinary = async (publicId) => {
 
 		const result = await cloudinary.uploader.destroy(publicId);
 
-		console.log("file deleted from cloudinary successfully");
 		return result;
 	} catch (error) {
 		throw new ApiError(500, `Cloudinary delete error: ${error.message}`);

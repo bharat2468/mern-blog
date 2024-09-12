@@ -14,7 +14,6 @@ const UserOptionsButton = () => {
 		mutationFn: logout,
 		onSuccess: (response) => {
 			// Assuming the API returns user data on successful login
-			console.log(response.data);
 			dispatch(logoutAction());
 			navigate("/"); // Redirect to dashboard or home page
 		},

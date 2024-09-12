@@ -13,7 +13,6 @@ const updatePostData = async (data, postId) => {
 };
 
 const updatePostImage = async (data, postId) => {
-	console.log(data);
 	return await api.patch(`/posts/update-image/${postId}`, data, {
 		headers: {
 			"Content-Type": "multipart/form-data",
@@ -25,9 +24,9 @@ const deletePost = async (postId) => {
 	return await api.delete(`/posts/delete/${postId}`);
 };
 
-const allPosts = async (page = 1, limit = 10, pagination, searchString) => {
+const allPosts = async (page = 1, limit = 10, pagination) => {
 	return await api.get(
-		`/posts/all-posts?page=${page}&limit=${limit}&pagination=${pagination}&searchString=${searchString}`
+		`/posts/all-posts?page=${page}&limit=${limit}&pagination=${pagination}`
 	);
 };
 

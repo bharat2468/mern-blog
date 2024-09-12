@@ -12,7 +12,6 @@ function PostContent({ post }) {
 		onSuccess: () => {
 			setIsLiked(true);
 			setLikesCount(likesCount + 1);
-			console.log("Post liked");
 		},
 		onError: (error) => console.error("Post liking failed:", error),
 	});
@@ -22,7 +21,6 @@ function PostContent({ post }) {
 		onSuccess: () => {
 			setIsLiked(false);
 			setLikesCount(likesCount - 1);
-			console.log("Post unliked");
 		},
 		onError: (error) => console.error("Post unliking failed:", error),
 	});

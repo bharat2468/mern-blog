@@ -16,7 +16,6 @@ function UpdatePasswordForm({ setShowPasswordForm }) {
     const { mutate, isPending, isError, error } = useMutation({
         mutationFn: changePassword,
         onSuccess: (data) => {
-            console.log("Password changed successfully:", data);
             setShowSuccessMessage(true);
             setTimeout(() => {
                 setShowSuccessMessage(false);

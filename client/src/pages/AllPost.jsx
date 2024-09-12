@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { allPosts } from "../api/posts";
 import { Container, Error, Loading, PostCard } from "../components";
 import { useQuery } from "@tanstack/react-query";
-import { FiSearch } from "react-icons/fi";
+import { FaSearch } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
 
 const AllPost = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const currentPageFromUrl = parseInt(searchParams.get("page") || "1", 10); // Get page from URL
 	const [page, setPage] = useState(currentPageFromUrl);
-	const limit = 10; // You can adjust this value as needed
+	const limit = 9; // You can adjust this value as needed
 
 	useEffect(() => {
 		// Sync the page state with the URL
@@ -25,19 +25,10 @@ const AllPost = () => {
 	} = useQuery({
 		queryKey: ["posts", page],
 		queryFn: () => allPosts(page, limit, true),
-		keepPreviousData: true,
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		staleTime: 1000 * 60 * 5,
 	});
-
-	if (isLoading) {
-		return (
-			<div className="w-full h-[80vh] flex justify-center items-center">
-				<Loading className="w-20" />
-			</div>
-		);
-	}
 
 	if (isError) {
 		console.error(error);
@@ -50,7 +41,7 @@ const AllPost = () => {
 		<Container className="my-10">
 			<div className="flex justify-center items-center md:hidden">
 				<Link to="/search" className="btn btn-primary ">
-					<FiSearch />{" "}
+					<FaSearch className="" />{" "}
 				</Link>
 			</div>
 			<div className="flex justify-center mb-6 relative">
@@ -61,7 +52,7 @@ const AllPost = () => {
 					Previous
 				</button>
 				<span className="px-4 py-2">
-					Page {currentPage} of {totalPages}
+					Page {page} of {totalPages}
 				</span>
 				<button
 					onClick={() =>
@@ -69,22 +60,28 @@ const AllPost = () => {
 							!isPreviousData && old < totalPages ? old + 1 : old
 						)
 					}
-					disabled={isPreviousData || page === totalPages}
+					disabled={page === totalPages}
 					className="btn btn-primary">
 					Next
 				</button>
 				<Link
 					to="/search"
 					className="btn btn-primary absolute top-0 right-20 max-md:hidden">
-					<FiSearch />{" "}
+					<FaSearch />{" "}
 				</Link>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 md:px-10 lg:px-20">
-				{posts?.map((post) => (
-					<PostCard key={post._id} {...post} className="w-full" />
-				))}
-			</div>
+			{isLoading ? (
+				<div className="w-full h-[80vh] flex justify-center items-center">
+					<Loading className="w-20" />
+				</div>
+			) : (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 md:px-10 lg:px-20">
+					{posts?.map((post) => (
+						<PostCard key={post._id} {...post} className="w-full" />
+					))}
+				</div>
+			)}
 		</Container>
 	);
 };

@@ -39,7 +39,6 @@ function Signup() {
 	const { mutate, isPending, isError, error } = useMutation({
 		mutationFn: signUp,
 		onSuccess: (response) => {
-			console.log(response.data.data);
 			setRegistrationSuccess(true);
 			setTimeout(() => {
 				navigate("/login");

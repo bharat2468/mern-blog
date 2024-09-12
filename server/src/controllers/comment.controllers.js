@@ -56,7 +56,6 @@ const allComments = asyncHandler(async (req, res) => {
 const getCommentsForPost = asyncHandler(async (req, res) => {
 	const postId = req.params?.postId;
 	const userId = req.user?._id;
-	console.log(userId);
 
 	// Pagination parameters
 	const page = parseInt(req.query.page) || 1;

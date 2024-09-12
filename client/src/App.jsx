@@ -38,7 +38,7 @@ function App() {
 
         if (isError) {
             dispatch(logout());
-			if (error.response?.data?.message === "JWT expired") {
+			if (error.response?.data?.message === "jwt expired") {
                 // Trigger token refresh
                 refreshTokenMutation.mutate();
             }

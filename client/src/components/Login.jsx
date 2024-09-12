@@ -24,7 +24,6 @@ function Login() {
 		mutationFn: login,
 		onSuccess: (response) => {
 			// Assuming the API returns user data on successful login
-            console.log(response.data.data);
 			dispatch(loginAction(response.data.data));
 			navigate("/"); // Redirect to dashboard or home page
 		},

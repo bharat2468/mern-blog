@@ -26,7 +26,6 @@ function PostHeader({ post }) {
 				setShowModal(false);
 				navigate("/all-posts");
 			}, 2000);
-			console.log("Post deleted successfully");
 		},
 	});
 

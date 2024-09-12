@@ -39,7 +39,6 @@ function UpdateDataForm({ user, setShowPasswordForm }) {
             // Handle successful deletion (e.g., redirect to login page)
 			dispatch(logout());
 			navigate("/");
-            console.log("Profile deleted successfully");
         },
     });
 

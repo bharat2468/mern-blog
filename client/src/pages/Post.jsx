@@ -32,7 +32,6 @@ const Post = () => {
 	}
 
 	const post = response?.data?.data?.[0];
-	console.log(post);
 	return (
 		<Container className="flex flex-col items-center my-10">
 			<PostComponent  post={post}  />

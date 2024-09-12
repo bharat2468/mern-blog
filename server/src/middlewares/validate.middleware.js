@@ -14,7 +14,6 @@ const validate = (schema) => {
 					field: err.path[0],
 					message: err.message,
 				}));
-				console.log(formattedErrors);
 
 				throw new ApiError(
 					400,

@@ -21,6 +21,7 @@ const allPosts = asyncHandler(async (req, res) => {
 		{
 			$sort: {
 				createdAt: -1,
+				_id: -1,
 			},
 		},
 	];
@@ -50,7 +51,6 @@ const allPosts = asyncHandler(async (req, res) => {
 const getPost = asyncHandler(async (req, res) => {
 	const slug = req.params?.slug;
 	const userId = req.user?._id;
-	console.log(userId);
 
 	const pipeline = [
 		// Match the specific post by ID
@@ -110,8 +110,6 @@ const getPost = asyncHandler(async (req, res) => {
 });
 
 const createPost = asyncHandler(async (req, res) => {
-	console.log(req.body);
-	console.log(req.file);
 	const { title, timeToRead, content } = req.body;
 
 	const imageLocalPath = req?.file?.path;
@@ -178,7 +176,6 @@ const updatePostData = asyncHandler(async (req, res) => {
 
 	const tags = req?.body?.tags?.split(",");
 	const postId = req.params?.postId;
-	console.log(postId);
 
 	let updateData = {
 		...(timeToRead && { timeToRead }),
@@ -229,8 +226,6 @@ const updatePostImage = asyncHandler(async (req, res) => {
 	// upload new on cloudinary -> error
 	// update in the database
 	// delete prev from db
-	console.log(req.body);
-	console.log(req.file);
 	const postId = req.params?.postId;
 
 	const newImageLocalPath = req?.file?.path;
@@ -309,6 +304,7 @@ const searchPost = asyncHandler(async (req, res) => {
 		{
 			$sort: {
 				createdAt: -1,
+				_id: -1,
 			},
 		},
 	];

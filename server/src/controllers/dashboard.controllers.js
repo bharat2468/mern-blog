@@ -11,7 +11,6 @@ const fetchDashboardData = asyncHandler(async (req, res) => {
 		Comment.aggregate([{ $count: "totalComments" }]),
 		Post.aggregate([{ $count: "totalPosts" }]),
 	]);
-	console.log(userCount, commentCount, postCount);
 	
 	// Fetch recent data
 	const recentUsers = await User.aggregate([
@@ -68,7 +67,6 @@ const fetchDashboardData = asyncHandler(async (req, res) => {
 		{ $project: { _id: 1, title: 1, author: 1 } },
 	]);
 
-	console.log(recentComments);
 
 	return res.status(200).json(
 		new ApiResponse(

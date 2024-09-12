@@ -12,14 +12,12 @@ function AvatarUpload() {
     const { mutate, isPending, isError, error } = useMutation({
         mutationFn: updateAvatar,
         onSuccess: (response) => {
-            console.log(response.data);
             queryClient.invalidateQueries(['currentUser']);
         },
         onError: (error) => {
             console.error("Avatar update failed:", error);
         },
     });
-    console.log(isPending);
 
     const onSubmit = (data) => {
         if (data.avatar[0]) {

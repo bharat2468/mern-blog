@@ -319,8 +319,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 			throw new ApiError(401, "User does not exist");
 		}
 
-		console.log("db:", user.refreshToken);
-		console.log("incoming", incomingRefreshToken);
 
 		if (incomingRefreshToken !== user.refreshToken) {
 			throw new ApiError(401, "Invalid refresh token");
@@ -419,7 +417,6 @@ const updateUserFields = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-	console.log(req.cookies);
 	
 	return res.status(200).json(
 		new ApiResponse(
@@ -438,7 +435,6 @@ const updateAvatar = asyncHandler(async (req, res) => {
 	// update in the database
 	// delete prev from db
 
-	console.log(req.file);
 	const newAvatarLocalPath = req.file?.path;
 
 	if (!newAvatarLocalPath) {
@@ -464,7 +460,6 @@ const updateAvatar = asyncHandler(async (req, res) => {
 	});
 
 	const oldAvatarUrl = user.avatar;
-	console.log(oldAvatarUrl);
 	const publicId = oldAvatarUrl
 		? oldAvatarUrl.split("/").slice(-1)[0].split(".")[0]
 		: null;

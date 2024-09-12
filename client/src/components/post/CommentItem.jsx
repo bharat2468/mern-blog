@@ -29,7 +29,6 @@ function CommentItem({ comment, onCommentDeleted }) {
         onSuccess: () => {
             comment.isLiked = true;
             comment.likesCount++;
-            console.log("Comment liked");
         },
         onError: (error) => console.error("Comment liking failed:", error),
     });
@@ -39,7 +38,6 @@ function CommentItem({ comment, onCommentDeleted }) {
         onSuccess: () => {
             comment.isLiked = false;
             comment.likesCount--;
-            console.log("Comment unliked");
         },
         onError: (error) => console.error("Comment unliking failed:", error),
     });
@@ -79,7 +77,6 @@ function CommentItem({ comment, onCommentDeleted }) {
 	};
 
 	const onSubmit = (data) => {
-		console.log(data);
 		editMutation.mutate({ commentId: comment._id, data});
 	};
 

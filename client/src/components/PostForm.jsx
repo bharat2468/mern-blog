@@ -51,13 +51,11 @@ function PostForm() {
 		onSuccess: (response) => {
 			queryClient.refetchQueries(["posts"]);
 			queryClient.refetchQueries(["post", post.slug]);
-			console.log(post.slug);
 			setShowUpdateSuccessMessage(true);
 			setTimeout(() => {
 				setShowUpdateSuccessMessage(false);
 				navigate(`/post/${response.data?.data?.slug}`);
 			}, 2000);
-			console.log("Post updated successfully");
 		},
 	});
 
@@ -75,7 +73,6 @@ function PostForm() {
 				setShowCreateSuccessMessage(false);
 				navigate(`/post/${response.data?.data?.slug}`);
 			}, 2000);
-			console.log("Post created successfully");
 		},
 	});
 	//?req to create post
@@ -87,7 +84,6 @@ function PostForm() {
 	const [buttonDisable, setButtonDisable] = useState(false);
 
 	const submit = async (data) => {
-		console.log(data);
 		setButtonDisable(true);
 
 		const formData = new FormData();
