@@ -56,7 +56,7 @@ function App() {
     }
 
     return (
-        <div className="wrapper min-h-screen max-md:text-sm max-sm:text-xs">
+        <div className="wrapper min-h-screen max-md:text-sm max-sm:text-xs ">
             <Header />
             <Outlet />
             <Footer />
