@@ -27,7 +27,6 @@ const queryClient = useQueryClient()
 		<div className="flex justify-center">
 			<GoogleLogin
 				onSuccess={(credentialResponse) => {
-				
 					mutate(credentialResponse?.credential);
 				}}
 				onError={() => {

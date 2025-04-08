@@ -51,6 +51,12 @@ const deleteUser = async () => {
 const changePassword = async (data) => {
 	return await api.post("/users/change-password", data);
 };
+const makeAdmin = async (id) => {
+	return await api.patch(`/users/make-admin/${id}`);
+};
+const dismissAdmin = async (id) => {
+	return await api.patch(`/users/dismiss-admin/${id}`);
+};
 
 
 export {
@@ -66,4 +72,6 @@ export {
 	adminDeleteUser,
 	deleteUser,
 	refreshToken,
+	makeAdmin,
+	dismissAdmin,
 };

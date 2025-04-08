@@ -487,7 +487,45 @@ const adminDeleteUser = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(new ApiResponse(200, deletedUser, "user deleted successfully"));
 })
-
+const makeAdmin = asyncHandler(async (req, res) => {
+	const userId = req.params?.userId;
+	if(!userId){
+		throw new ApiError(400, "User id required");
+	}
+	const user = await User.findById(userId);
+	if (!user) {
+		throw new ApiError(404, "User not found");
+	}
+	if (user.role === "admin") {
+		throw new ApiError(400, "User is already an admin");
+	}
+	user.role = "admin";
+	await user.save();
+	return res
+		.status(200)
+		.json(new ApiResponse(200, user, "User role updated to admin"));
+})
+const dismissAdmin = asyncHandler(async (req, res) => {
+	const userId = req.params?.userId;
+	if(!userId){
+		throw new ApiError(400, "User id required");
+	}
+	const user = await User.findById(userId);
+	if (!user) {
+		throw new ApiError(404, "User not found");
+	}
+	if (user.role === "user") {
+		throw new ApiError(400, "User is not an admin");
+	}
+	if(userId.toString() === req.user._id.toString()){
+		throw new ApiError(400, "You cannot dismiss yourself from admin role");
+	}
+	user.role = "user";
+	await user.save();
+	return res
+		.status(200)
+		.json(new ApiResponse(200, user, "User dismissed from admin role"));
+})
 export {
 	registerUser,
 	loginUser,
@@ -501,4 +539,6 @@ export {
 	allUsers,
 	googleAuthHandler,
 	adminDeleteUser,
+	makeAdmin,
+	dismissAdmin
 };
